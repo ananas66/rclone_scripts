@@ -1,0 +1,27 @@
+[Unit]
+Description=Rclone Google Drive Mount
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/rclone mount \
+        --config=/root/.config/rclone/rclone.conf \
+	      --use-mmap \
+	      --umask 000 \
+        --allow-other \
+	      --allow-non-empty \
+	      --dir-cache-time 24h \
+	      --cache-dir=/home/cache \
+        --vfs-cache-mode full \
+	      --vfs-cache-max-size 10G \
+	      --vfs-read-chunk-size-limit 64M \
+	      --buffer-size 512M \
+	      --vfs-read-chunk-size 16M \
+        gd: \
+        /mnt/gd
+ExecStop=/bin/fusermount -u /mnt/gd
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
