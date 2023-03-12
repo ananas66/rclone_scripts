@@ -8,7 +8,7 @@ import os
 TPSLIMIT = 3
 TRANSFERS = 3
 # bandiwidth limits for gd
-BWLIMIT = "8.5M"
+BWLIMIT = "1000M"
 # one to one correspondence
 SOURCE_PATH_LIST = ["/your/source/path/a/", "/your/source/path/b/"]
 DESTINATION_PATH_LIST = ["remote_drive_a:remote/path/a/", "remote_drive_b:remote/path/b/"]
