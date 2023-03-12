@@ -9,6 +9,7 @@
 2. 由于未使用service account，需限制全局下载速度到8.5MB及以下。
 3. 限制全局最大下载数为1。
 4. 禁止种子上传，具体做法是开启Seed limits中When ratio reaches 0。
+5. 添加种子时勾选Download in sequential order。
 
 然后自行配置好rclone，并将upload.py中的SOURCE_PATH_LIST修改为qb的下载路径，DESTINATION_PATH_LIST修改为云端的路径。
 
