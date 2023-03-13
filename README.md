@@ -11,8 +11,8 @@
 4. 禁止种子上传，具体做法是开启Seed limits中When ratio reaches 0。
 5. 添加种子时勾选Download in sequential order。
 
-然后自行配置好rclone，并将upload.py中的SOURCE_PATH_LIST修改为qb的下载路径，DESTINATION_PATH_LIST修改为云端的路径。
+然后自行配置好rclone，并将upload.py中的SOURCE_PATH_LIST修改为qb的下载路径，DESTINATION_PATH_LIST修改为云端的路径，并修改QB_USERNAME和QB_PASSWORD。
 
-最后配置crontab，每2分钟执行一次python3 upload.py即可。
+最后配置crontab，每10分钟执行一次python3 upload.py即可。
 ## rclone_gd.service
 这里是rclone挂载google drive的systemd配置，挂载参数对流媒体播放做了一些优化，可以自行使用。
