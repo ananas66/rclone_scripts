@@ -4,6 +4,7 @@ import sys
 import socket
 import argparse
 import os
+from qbittorrentapi import Client
 
 TPSLIMIT = 3
 TRANSFERS = 3
@@ -12,6 +13,15 @@ BWLIMIT = "1000M"
 # one to one correspondence
 SOURCE_PATH_LIST = ["/your/source/path/a/", "/your/source/path/b/"]
 DESTINATION_PATH_LIST = ["remote_drive_a:remote/path/a/", "remote_drive_b:remote/path/b/"]
+# qbittorrent login info
+QB_USERNAME = "yourusername"
+QB_PASSWORD = "yourpassword"
+
+def restart_qb_torrents():
+    client = Client(host='localhost:8080', username=QB_USERNAME, password=QB_PASSWORD)
+    client.torrents.pause.all()
+    time.sleep(15)
+    client.torrents.resume.all()
 
 def check_port_in_use(port, host='127.0.0.1'):
     s = None
@@ -34,11 +44,12 @@ def parse_args():
     args = parser.parse_args()
     return args
 
-def get_file_size(filePath, size=0):
+def get_finished_file_size(filePath, size=0):
     size = 0
     for root, dirs, files in os.walk(filePath):
         for f in files:
-            size += os.path.getsize(os.path.join(root, f))
+            if not f.endswith("!qB"):
+                size += os.path.getsize(os.path.join(root, f))
     return size
 
 def main():
@@ -50,7 +61,7 @@ def main():
         source_path = ""
         destination_path = ""
         for i in range(len(SOURCE_PATH_LIST)):
-            if get_file_size(SOURCE_PATH_LIST[i]) > 1:
+            if get_finished_file_size(SOURCE_PATH_LIST[i]) > 0:
                 source_path = SOURCE_PATH_LIST[i]
                 destination_path = DESTINATION_PATH_LIST[i]
 
@@ -66,9 +77,11 @@ def main():
         rclone_cmd += "--tpslimit {} --transfers {} --bwlimit {} --drive-chunk-size 32M ".format(TPSLIMIT, TRANSFERS, BWLIMIT)
         rclone_cmd += "--drive-acknowledge-abuse --log-file=\"/root/log_rclone.txt\" \"{}\" \"{}\" ".format(source_path, destination_path)
         # exclude unfinished qbittorrent files
-        rclone_cmd += "--exclude \"*.!qB\"  & "
+        rclone_cmd += "--exclude \"*.!qB\" "
         print(rclone_cmd)
         subprocess.check_call(rclone_cmd, shell=True)
+        restart_qb_torrents()
+
 
 if __name__ == "__main__":
     main()
