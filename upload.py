@@ -8,19 +8,20 @@ from qbittorrentapi import Client
 
 TPSLIMIT = 3
 TRANSFERS = 3
-# bandiwidth limits for gd
+# bandiwidth limits for uploading
 BWLIMIT = "1000M"
 # one to one correspondence
 SOURCE_PATH_LIST = ["/your/source/path/a/", "/your/source/path/b/"]
 DESTINATION_PATH_LIST = ["remote_drive_a:remote/path/a/", "remote_drive_b:remote/path/b/"]
 # qbittorrent login info
+QB_HOST = "localhost:8080"
 QB_USERNAME = "yourusername"
 QB_PASSWORD = "yourpassword"
 
 def restart_qb_torrents():
-    client = Client(host='localhost:8080', username=QB_USERNAME, password=QB_PASSWORD)
+    client = Client(host=QB_HOST, username=QB_USERNAME, password=QB_PASSWORD)
     client.torrents.pause.all()
-    time.sleep(15)
+    time.sleep(10)
     client.torrents.resume.all()
 
 def check_port_in_use(port, host='127.0.0.1'):
